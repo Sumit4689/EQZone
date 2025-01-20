@@ -1,0 +1,360 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+        Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background-color: #f3f4f7;
+    color: #333;
+}
+
+.container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.vertical-navbar {
+    width: 250px;
+    background-color: #3C2FA4;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.nav-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+}
+
+.nav-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #FDED62;
+}
+
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.menu-toggle span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background-color: #FDED62;
+    margin: 5px 0;
+    transition: 0.3s;
+}
+
+.nav-content {
+    padding: 1rem;
+}
+
+.nav-links {
+    list-style-type: none;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    color: #ffffff;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    position: relative;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: #FA8072;
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+.nav-link:hover, .nav-link.active {
+    background-color: #4d3cc7;
+    color: #FDED62;
+}
+
+.nav-link.active::after {
+    width: 100%;
+}
+
+.nav-link svg {
+    margin-right: 0.5rem;
+}
+
+.logout-btn {
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.main-content {
+    flex: 1;
+    padding: 2rem;
+    background: linear-gradient(to left, #ddd6f3, #faaca8);
+}
+
+.manage-profile {
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: white;
+    padding: 3rem 5rem 3rem 5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.manage-profile-title {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: #3C2FA4;
+}
+
+.manage-profile hr {
+    margin: 1.7rem 0;
+    border: none;
+    border-top: 1px solid #ddd;
+}
+
+.manage-profile-subtitle {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+    color: #3C2FA4;
+}
+
+.manage-profile-subtitle::after {
+    content: "";
+    display: block;
+    width: 3rem;
+    height: 4px;
+    background: #FA8072;
+    margin-top: 0.5rem;
+    border-radius: 2px;
+}
+
+.manage-profile-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.form-input {
+    width: 200px;
+    text-align: center;
+}
+
+.preview {
+    width: 200px;
+    height: 200px;
+    border: 2px dashed #3C2FA4;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.file-ip-1 {
+    border: 1px solid #3C2FA4;
+    background-color: #3C2FA4;
+    color: #FFFFFF;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 12px 30px;
+    letter-spacing: 1px;
+    outline: none;
+    text-transform: uppercase;
+    transition: transform 80ms ease-in;
+    box-shadow: 6px 6px #fb6868;
+}
+.file-ip-1:active {
+    transform: scale(0.95);
+    box-shadow: 2px 2px #d45959;
+    transition: 0.2s;
+}
+  
+.file-ip-1:hover {
+    color: #FDED62;
+}
+
+.form-input input[type="file"] {
+    display: none;
+}
+
+.manage-profile-txt-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.manage-profile-label {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.manage-profile-txt-field input,
+.manage-profile-txt-field textarea {
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    font-size: 1rem;
+    background-color: #eee;
+}
+
+.manage-profile-txt-field input:focus,
+.manage-profile-txt-field textarea:focus {
+    outline: none;
+    border-color: #3C2FA4;
+}
+
+.btn {
+    border: 1px solid #3C2FA4;
+    background-color: #3C2FA4;
+    color: #FFFFFF;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 12px 30px;
+    letter-spacing: 1px;
+    outline: none;
+    text-transform: uppercase;
+    transition: transform 80ms ease-in;
+    box-shadow: 6px 6px #fb6868;
+}
+
+.btn:active {
+    transform: scale(0.95);
+    box-shadow: 2px 2px #d45959;
+    transition: 0.2s;
+}
+
+.btn:hover {
+    color: #FDED62;
+}
+
+.manage-profile-close {
+    background-color: #ffebee;
+    border: 1px solid #ffcdd2;
+    padding: 1.5rem;
+    border-radius: 4px;
+    margin-top: 1.5rem;
+}
+
+.manage-profile-close p {
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.manage-profile-close p span {
+    display: block;
+    color: #f44336;
+    font-weight: 600;
+    margin-top: 0.5rem;
+}
+
+.delete-btn {
+    background-color: #f44336;
+}
+
+.delete-btn:hover {
+    background-color: #f56464;
+    color: white;
+}
+
+@media screen and (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .vertical-navbar {
+        width: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1000;
+    }
+
+    .nav-content {
+        display: none;
+    }.nav-content {
+        display: none;
+    }
+
+    .nav-content.show {
+        display: block;
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+
+    .main-content {
+        margin-top: 60px;
+        padding: 1rem;
+    }
+
+    .manage-profile {
+        padding: 1rem;
+    }
+
+    .manage-profile-title {
+        font-size: 1.5rem;
+    }
+
+    .manage-profile-subtitle {
+        font-size: 1.2rem;
+    }
+
+    .btn {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .manage-profile-title {
+        font-size: 1.2rem;
+    }
+
+    .manage-profile-subtitle {
+        font-size: 1rem;
+    }
+
+    .manage-profile-label {
+        font-size: 0.9rem;
+    }
+
+    .manage-profile-txt-field input,
+    .manage-profile-txt-field textarea,
+    .btn {
+        font-size: 0.9rem;
+    }
+}
+

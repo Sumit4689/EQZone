@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EQZone</title>
+    <link rel="stylesheet" href="/index.css" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+  </head>
+
+  <body>
+    <div id="welcomeModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Welcome to EQZone!</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <h3>What is EQ?</h3>
+                <p>EQ (Equalization) is the process of adjusting the balance between frequency components within an electronic signal. For IEMs (In-Ear Monitors), EQ helps customize the sound signature to your preferences.</p>
+                
+                <h3>About EQZone</h3>
+                <p>EQZone is a community-driven platform where users can:</p>
+                <ul>
+                    <li>Share and discover IEM EQ presets</li>
+                    <li>Download presets for your favorite IEMs</li>
+                    <li>Upload your own custom EQ settings</li>
+                    <li>Interact with other audio enthusiasts</li>
+                </ul>
+                
+                <h3>Getting Started</h3>
+                <p>Browse through our collection of presets, create an account to:</p>
+                <ul>
+                    <li>Save your favorite presets</li>
+                    <li>Share your own EQ settings</li>
+                    <li>Comment and interact with the community</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <label class="dont-show-again">
+                    <input type="checkbox" id="dontShowAgain">
+                    Don't show this again
+                </label>
+                <button class="modal-button" id="getStartedBtn">Get Started!</button>
+            </div>
+        </div>
+    </div>
+
+    <nav class="navbar">
+      <div class="navbar-container">
+        <div class="navbar-logo">
+          <a href="/EQZone" class="logo-text">EQZone</a>
+        </div>
+
+        <button
+          class="navbar-toggle"
+          aria-label="Toggle navigation"
+          aria-expanded="false"
+        >
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+        </button>
+
+        <ul class="navbar-menu">
+          <li class="nav-item">
+            <a href="/EQZone" class="nav-link">
+              Home
+              <span class="nav-link-underline"></span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/About" class="nav-link">
+              About
+              <span class="nav-link-underline"></span>
+            </a>
+          </li>
+          <% if (!isAuthenticated) { %>
+          <li class="nav-item">
+            <a href="/login" class="nav-link">
+              Login
+              <span class="nav-link-underline"></span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/register" class="nav-link">
+              SignUp
+              <span class="nav-link-underline"></span>
+            </a>
+          </li>
+          <% } else { %>
+          <li class="nav-item user-menu-container">
+            <button
+              class="user-icon-btn"
+              aria-label="User menu"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <i data-lucide="user-circle-2" class="user-icon"></i>
+            </button>
+            <ul class="user-menu">
+              <li><a href="/User/profilePage">Profile</a></li>
+              <li><a href="/User/myFiles">My Presets</a></li>
+              <li><a href="/logout" id="logout-link">Logout</a></li>
+            </ul>
+          </li>
+          <% } %>
+        </ul>
+      </div>
+    </nav>
+
+    <main class="main-content">
+      <section class="files-section">
+        <section class="hero">
+          <h1>Welcome to EQZone</h1>
+          <p>Explore and share IEM equalizer presets!</p>
+        </section>
+        <div class="filters-container">
+          <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search files..." />
+          </div>
+
+          <div class="filter-options">
+            <select id="brandFilter">
+              <option value="">All Brands</option>
+              <% const brands = [...new Set(presets.map(file => file.brand))];
+              brands.forEach(brand => { %>
+              <option value="<%= brand %>"><%= brand %></option>
+              <% }); %>
+            </select>
+
+            <select id="modelFilter">
+              <option value="">All Models</option>
+              <% const models = [...new Set(presets.map(file => file.model))];
+              models.forEach(model => { %>
+              <option value="<%= model %>"><%= model %></option>
+              <% }); %>
+            </select>
+
+            <select id="sortBy">
+              <option value="date-new">Newest First</option>
+              <option value="date-old">Oldest First</option>
+              <option value="downloads">Most Downloads</option>
+              <option value="title">Title A-Z</option>
+              <option value="likes">Most Liked</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="files-grid" id="filesGrid">
+          <% presets.forEach(file => { %>
+          <div
+            class="file-card"
+            data-file-id="<%= file._id %>"
+            data-brand="<%= file.brand %>"
+            data-model="<%= file.model %>"
+            data-like-count="<%= file.likeCount || 0 %>"
+            onclick="window.location.href='/User/preset/<%= file._id %>'"
+          >
+            <div class="card-header">
+              <h3><%= file.title %></h3>
+              <div class="card-stats">
+                <span class="download-count">
+                  <i data-lucide="download"></i>
+                  <%= file.downloadCount %>
+                </span>
+              </div>
+            </div>
+            <div class="card-body">
+              <p class="description"><%= file.description %></p>
+              <p class="uploader-email">Uploaded by: <%= file.uploadedBy %></p>
+              <div class="tags">
+                <div class="alltags">
+                  <span class="tag brand"><%= file.brand %></span>
+                  <span class="tag model"><%= file.model %></span>
+                </div>
+                <button
+                  class="like-count"
+                  data-preset-id="<%= file._id %>"
+                  data-is-liked="<%= file.likes?.some(like => like._id.toString() === user?.id) %>"
+                  data-like-count="<%= file.likeCount || 0 %>"
+                  onclick="event.stopPropagation();"
+                >
+                  <i
+                    data-lucide="heart"
+                    style="fill: <%= file.likes?.some(like => like._id.toString() === user?.id) ? '#ff4444' : 'none' %>"
+                  ></i>
+                  <span><%= file.likeCount || 0 %></span>
+                </button>
+              </div>
+              <div class="card-footer">
+                <span class="upload-date">
+                  <%= new Date(file.createdAt).toLocaleDateString() %>
+                </span>
+                <button
+                  class="download-btn"
+                  type="button"
+                  onclick="event.stopPropagation();"
+                >
+                  Download
+                </button>
+              </div>
+            </div>
+          </div>
+          <% }); %>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      // Move downloadFile to global scope
+      async function downloadFile(fileId, title) {
+          try {
+              const downloadResponse = await fetch(`/EQZone/api/files/${fileId}/download`);
+              if (!downloadResponse.ok) throw new Error('Download failed');
+
+              // Get the file content
+              const blob = await downloadResponse.blob();
+              const url = window.URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = `${title}.txt`; // Use the preset title
+              document.body.appendChild(a);
+              a.click();
+              document.body.removeChild(a);
+              window.URL.revokeObjectURL(url);
+
+              // Update download count without page refresh
+              const card = document.querySelector(`.file-card[data-file-id="${fileId}"]`);
+              const countSpan = card.querySelector('.download-count');
+              const currentCount = parseInt(countSpan.textContent);
+              countSpan.innerHTML = `
+                  <i data-lucide="download"></i>
+                  ${currentCount + 1}
+              `;
+              lucide.createIcons();
+          } catch (error) {
+              console.error('Error downloading file:', error);
+              alert('Error downloading file. Please try again.');
+          }
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+          const navbarToggle = document.querySelector('.navbar-toggle');
+          const navbarMenu = document.querySelector('.navbar-menu');
+          const userIconBtn = document.querySelector('.user-icon-btn');
+          const userMenu = document.querySelector('.user-menu');
+          let isMenuOpen = false;
+          let isUserMenuOpen = false;
+
+          function toggleMenu() {
+              isMenuOpen = !isMenuOpen;
+              navbarToggle.classList.toggle('active');
+              navbarMenu.classList.toggle('active');
+              navbarToggle.setAttribute('aria-expanded', isMenuOpen);
+              document.body.style.overflow = isMenuOpen ? 'hidden' : '';
+          }
+
+          function closeMenu() {
+              if (isMenuOpen) {
+                  isMenuOpen = false;
+                  navbarToggle.classList.remove('active');
+                  navbarMenu.classList.remove('active');
+                  navbarToggle.setAttribute('aria-expanded', 'false');
+                  document.body.style.overflow = '';
+              }
+          }
+
+          function toggleUserMenu(event) {
+              event.stopPropagation();
+              isUserMenuOpen = !isUserMenuOpen;
+              userMenu.classList.toggle('active');
+              userIconBtn.setAttribute('aria-expanded', isUserMenuOpen);
+          }
+
+          function closeUserMenu() {
+              if (isUserMenuOpen) {
+                  isUserMenuOpen = false;
+                  userMenu.classList.remove('active');
+                  userIconBtn.setAttribute('aria-expanded', 'false');
+              }
+          }
+
+          // Toggle menu on button click
+          navbarToggle.addEventListener('click', (e) => {
+              e.stopPropagation();
+              toggleMenu();
+          });
+
+          // Toggle user menu on button click
+          if (userIconBtn) {
+              userIconBtn.addEventListener('click', toggleUserMenu);
+          }
+
+          // Close menus when clicking outside
+          document.addEventListener('click', (e) => {
+              if (isMenuOpen && !navbarMenu.contains(e.target) && !navbarToggle.contains(e.target)) {
+                  closeMenu();
+              }
+              if (isUserMenuOpen && !userMenu.contains(e.target) && !userIconBtn.contains(e.target)) {
+                  closeUserMenu();
+              }
+          });
+
+          if(<%=isAuthenticated%>){
+              document.getElementById("logout-link").addEventListener("click", (e) => {
+                  e.preventDefault();
+                  handleLogout();
+              });
+          }
+
+          function handleLogout() {
+              fetch('/logout', {
+                  method: 'POST',
+                  credentials: 'same-origin'
+              })
+              .then(response => {
+                  if (response.ok) {
+                      window.location.href = '/EQZone';
+                  }
+              })
+              .catch(error => console.error('Logout error:', error));
+          }
+
+          // Close menu when clicking on a link
+          const navLinks = document.querySelectorAll('.nav-link');
+          navLinks.forEach(link => {
+              link.addEventListener('click', closeMenu);
+          });
+
+          // Close menus on escape key press
+          document.addEventListener('keydown', (e) => {
+              if (e.key === 'Escape') {
+                  if (isMenuOpen) closeMenu();
+                  if (isUserMenuOpen) closeUserMenu();
+              }
+          });
+
+          // Handle window resize
+          let resizeTimer;
+          window.addEventListener('resize', () => {
+              clearTimeout(resizeTimer);
+              resizeTimer = setTimeout(() => {
+                  if (window.innerWidth > 768) {
+                      if (isMenuOpen) closeMenu();
+                      if (isUserMenuOpen) closeUserMenu();
+                  }
+              }, 250);
+          });
+
+          // Initialize Lucide icons
+          lucide.createIcons();
+
+          // File filtering and sorting functionality
+          const searchInput = document.getElementById('searchInput');
+          const brandFilter = document.getElementById('brandFilter');
+          const modelFilter = document.getElementById('modelFilter');
+          const sortBySelect = document.getElementById('sortBy');
+          const filesGrid = document.getElementById('filesGrid');
+
+          function filterAndSortFiles() {
+              const searchTerm = searchInput.value.toLowerCase();
+              const selectedBrand = brandFilter.value;
+              const selectedModel = modelFilter.value;
+              const sortBy = sortBySelect.value;
+
+              const cards = Array.from(filesGrid.getElementsByClassName('file-card'));
+
+              cards.forEach(card => {
+                  const title = card.querySelector('h3').textContent.toLowerCase();
+                  const brand = card.dataset.brand;
+                  const model = card.dataset.model;
+
+                  const matchesSearch = title.includes(searchTerm);
+                  const matchesBrand = !selectedBrand || brand === selectedBrand;
+                  const matchesModel = !selectedModel || model === selectedModel;
+
+                  card.style.display = matchesSearch && matchesBrand && matchesModel ? 'block' : 'none';
+              });
+
+              // Sort cards
+              const sortedCards = cards.sort((a, b) => {
+                  switch(sortBy) {
+                      case 'date-new':
+                          return new Date(b.querySelector('.upload-date').textContent) -
+                                 new Date(a.querySelector('.upload-date').textContent);
+                      case 'date-old':
+                          return new Date(a.querySelector('.upload-date').textContent) -
+                                 new Date(b.querySelector('.upload-date').textContent);
+                      case 'downloads':
+                          return parseInt(b.querySelector('.download-count').textContent) -
+                                 parseInt(a.querySelector('.download-count').textContent);
+                      case 'title':
+                          return a.querySelector('h3').textContent.localeCompare(b.querySelector('h3').textContent);
+                      case 'likes':
+                          return parseInt(b.dataset.likeCount || 0) - parseInt(a.dataset.likeCount || 0);
+                  }
+              });
+
+              filesGrid.innerHTML = '';
+              sortedCards.forEach(card => filesGrid.appendChild(card));
+          }
+
+          // Add event listeners
+          searchInput.addEventListener('input', filterAndSortFiles);
+          brandFilter.addEventListener('change', filterAndSortFiles);
+          modelFilter.addEventListener('change', filterAndSortFiles);
+          sortBySelect.addEventListener('change', filterAndSortFiles);
+
+          // Add event listeners for download buttons
+          document.querySelectorAll('.download-btn').forEach(button => {
+              button.addEventListener('click', (e) => {
+                  e.preventDefault(); // Prevent default navigation
+                  e.stopPropagation(); // Stop event from bubbling up to the card
+                  const fileCard = button.closest('.file-card');
+                  const fileId = fileCard.dataset.fileId;
+                  const title = fileCard.querySelector('h3').textContent;
+                  downloadFile(fileId, title);
+              });
+          });
+
+          // Like functionality
+          const isAuthenticated = '<%= isAuthenticated %>' === 'true';
+
+          const likeButtons = document.querySelectorAll('.like-count');
+
+          // Initialize Lucide icons
+          lucide.createIcons();
+
+          likeButtons.forEach(likeBtn => {
+              const presetId = likeBtn.dataset.presetId;
+              const likeIcon = likeBtn.querySelector('svg');
+              const likeCountSpan = likeBtn.querySelector('span');
+
+
+              // Set initial state
+              let isLiked = likeBtn.dataset.isLiked === 'true';
+              if (likeIcon) {
+                  likeIcon.style.fill = isLiked ? '#ff4444' : 'none';
+                  likeCountSpan.textContent = likeBtn.dataset.likeCount;
+
+                  likeBtn.addEventListener('click', async (e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+
+                      if (!isAuthenticated) {
+                        if (confirm('Please login to like this preset')) {
+                          window.location.href = '/login';
+                        }
+                        return;
+                      }
+
+                      try {
+                          const response = await fetch(`/User/api/presets/${presetId}/like`, {
+                              method: 'POST',
+                              headers: {
+                                  'Content-Type': 'application/json'
+                              }
+                          });
+
+                          if (response.ok) {
+                              const data = await response.json();
+                              likeCountSpan.textContent = data.likeCount;
+
+                              // Add animation class
+                              likeIcon.classList.add('like-animation');
+                              setTimeout(() => {
+                                  likeIcon.classList.remove('like-animation');
+                              }, 300);
+
+                              // Toggle fill based on like state
+                              isLiked = data.isLiked;
+                              likeIcon.style.fill = isLiked ? '#ff4444' : 'none';
+                          }
+                      } catch (error) {
+                          console.error('Error liking preset:', error);
+                      }
+                  });
+              }
+          });
+
+          // Welcome Modal functionality
+          const modal = document.getElementById('welcomeModal');
+          const closeBtn = document.querySelector('.close-modal');
+          const getStartedBtn = document.getElementById('getStartedBtn');
+          const dontShowCheckbox = document.getElementById('dontShowAgain');
+
+          // Check if user has seen the modal before
+          const hasSeenModal = localStorage.getItem('hasSeenWelcomeModal');
+
+          if (!hasSeenModal) {
+              setTimeout(() => {
+                  modal.classList.add('show');
+              }, 1000); // Show modal after 1 second
+          }
+
+          // Close modal functions
+          function closeModal() {
+              modal.classList.remove('show');
+              if (dontShowCheckbox.checked) {
+                  localStorage.setItem('hasSeenWelcomeModal', 'true');
+              }
+          }
+
+          closeBtn.addEventListener('click', closeModal);
+          getStartedBtn.addEventListener('click', closeModal);
+
+          // Close modal when clicking outside
+          modal.addEventListener('click', (e) => {
+              if (e.target === modal) {
+                  closeModal();
+              }
+          });
+
+          // Close modal with Escape key
+          document.addEventListener('keydown', (e) => {
+              if (e.key === 'Escape' && modal.classList.contains('show')) {
+                  closeModal();
+              }
+          });
+      });
+    </script>
+  </body>
+</html>

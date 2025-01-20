@@ -1,0 +1,482 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+        Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background-color: #f3f4f7;
+    color: #333;
+}
+
+.container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.vertical-navbar {
+    width: 250px;
+    background-color: #3C2FA4;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.nav-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+}
+
+.nav-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #FDED62;
+}
+
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.menu-toggle span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background-color: #FDED62;
+    margin: 5px 0;
+    transition: 0.3s;
+}
+
+.nav-content {
+    padding: 1rem;
+}
+
+.nav-links {
+    list-style-type: none;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    color: #ffffff;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    position: relative;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: #FA8072;
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+.nav-link:hover, .nav-link.active {
+    background-color: #4d3cc7;
+    color: #FDED62;
+}
+
+.nav-link.active::after {
+    width: 100%;
+}
+
+.nav-link svg {
+    margin-right: 0.5rem;
+}
+
+.logout-btn {
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.main-content {
+    flex: 1;
+    padding: 2rem;
+    background: linear-gradient(to left, #ddd6f3, #faaca8);
+}
+
+@media screen and (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .vertical-navbar {
+        width: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1000;
+    }
+
+    .nav-content {
+        display: none;
+    }.nav-content {
+        display: none;
+    }
+
+    .nav-content.show {
+        display: block;
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+
+    .main-content {
+        margin-top: 60px;
+        padding: 1rem;
+    }
+
+    .manage-profile {
+        padding: 1rem;
+    }
+
+    .manage-profile-title {
+        font-size: 1.5rem;
+    }
+
+    .manage-profile-subtitle {
+        font-size: 1.2rem;
+    }
+
+    .btn {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .manage-profile-title {
+        font-size: 1.2rem;
+    }
+
+    .manage-profile-subtitle {
+        font-size: 1rem;
+    }
+
+    .manage-profile-label {
+        font-size: 0.9rem;
+    }
+
+    .manage-profile-txt-field input,
+    .manage-profile-txt-field textarea,
+    .btn {
+        font-size: 0.9rem;
+    }
+}
+
+.user-menu-container {
+    position: relative;
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+}
+
+
+.user-icon-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.user-icon {
+    width: 32px;
+    height: 32px;
+    color: var(--text-color);
+}
+
+.user-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: var(--primary-color);
+    border-radius: 4px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    list-style: none;
+    padding: 0.5rem 0;
+    min-width: 200px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: opacity var(--transition-speed) ease,
+                visibility var(--transition-speed) ease,
+                transform var(--transition-speed) ease;
+}
+
+.user-menu.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.user-menu li {
+    padding: 0.5rem 1rem;
+}
+
+.user-menu a {
+    color: var(--text-color);
+    text-decoration: none;
+    display: block;
+    transition: color var(--transition-speed) ease;
+    font-size: 1.1rem;
+}
+
+.user-menu a:hover {
+    color: var(--logo-color);
+}
+
+/* Main content styles */
+.main-content {
+    padding-top: var(--navbar-height);
+}
+
+.hero {
+    min-height: calc(10vh - var(--navbar-height));
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 2rem 2rem 2rem 2rem;
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    color: #333;
+
+}
+
+
+.files-section {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.filters-container {
+    margin-bottom: 2rem;
+    background-color: white;
+    padding: 1rem;
+}
+
+.search-box {
+    margin-bottom: 1rem;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    font-size: 1rem;
+    background-color: #eee;
+    color: #333;
+}
+
+.filter-options {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.filter-options select {
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    background-color: #eee;
+    min-width: 150px;
+    color: #333;
+}
+
+.files-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.file-card {
+    background: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+}
+
+.file-card:hover {
+    transform: translateY(-5px);
+}
+
+.card-header {
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #333;
+    text-overflow: ellipsis;
+}
+
+.download-count {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #666;
+}
+
+.card-body {
+    padding: 1rem;
+}
+
+.description {
+    margin-bottom: 1rem;
+    color: #666;
+}
+
+.uploader-email {
+    margin-bottom: 1rem;
+    color: #666;
+    font-size: 0.875rem;
+    font-style: italic;
+}
+
+.tags {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.alltags {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.tag {
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.875rem;
+}
+
+.tag.brand {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.tag.model {
+    background: #f3e5f5;
+    color: #7b1fa2;
+}
+
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+}
+
+.upload-date {
+    color: #666;
+    font-size: 0.875rem;
+}
+
+.download-btn {
+    border: 1px solid #3C2FA4;
+    background-color: #f44336;
+    color: #FFFFFF;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 12px 20px;
+    letter-spacing: 1px;
+    outline: none;
+    text-transform: uppercase;
+    transition: transform 80ms ease-in;
+    box-shadow: 3px 3px #fb6868;
+}
+
+.download-btn:active {
+    transform: scale(0.95);
+    box-shadow: 2px 2px #d45959;
+    transition: 0.2s;
+}
+
+.download-btn:hover {
+    color: #FDED62;
+    background-color: #f56464;
+}
+
+@media (max-width: 768px) {
+    .files-section {
+        padding: 1rem;
+    }
+    
+    .filter-options {
+        flex-direction: column;
+    }
+    
+    .filter-options select {
+        width: 100%;
+    }
+}
+
+
+.like-count {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    background: none;
+    border: none;
+    font-size: 22px;
+    color: #9c9c9c;
+}
+
+.like-count svg {
+    cursor: pointer;
+    color: #ff4444;
+}
+
+.like-count:hover {
+    transform: scale(1.1);
+}
+
+.like-count svg {
+    transition: fill 0.3s ease, transform 0.3s ease;
+}
+
+.like-animation {
+    animation: likeAnimation 0.3s ease;
+}
+
+@keyframes likeAnimation {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.4);
+    }
+    100% {
+        transform: scale(1);
+    }
+}

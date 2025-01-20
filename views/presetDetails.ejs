@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EQZone</title>
+    <link rel="stylesheet" href="/presetDetails.css" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <div class="navbar-container">
+        <div class="navbar-logo">
+          <a href="/EQZone" class="logo-text">EQZone</a>
+        </div>
+
+        <button
+          class="navbar-toggle"
+          aria-label="Toggle navigation"
+          aria-expanded="false"
+        >
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+        </button>
+
+        <ul class="navbar-menu">
+          <li class="nav-item">
+            <a href="/EQZone" class="nav-link">
+              Home
+              <span class="nav-link-underline"></span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              About
+              <span class="nav-link-underline"></span>
+            </a>
+          </li>
+          <% if (!isAuthenticated) { %>
+          <li class="nav-item">
+            <a href="/login" class="nav-link">
+              Login
+              <span class="nav-link-underline"></span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/register" class="nav-link">
+              SignUp
+              <span class="nav-link-underline"></span>
+            </a>
+          </li>
+          <% } else { %>
+          <li class="nav-item user-menu-container">
+            <button
+              class="user-icon-btn"
+              aria-label="User menu"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <i data-lucide="user-circle-2" class="user-icon"></i>
+            </button>
+            <ul class="user-menu">
+              <li><a href="/User/profilePage">Profile</a></li>
+              <li><a href="/User/settings">Settings</a></li>
+              <li><a href="/logout" id="logout-link">Logout</a></li>
+            </ul>
+          </li>
+          <% } %>
+        </ul>
+      </div>
+    </nav>
+
+    <main class="main-content">
+      <div class="preset-details">
+        <div class="preset-header">
+          <h1><%= preset.title %></h1>
+          <div class="preset-meta">
+            <span class="download-count">
+              <i data-lucide="download"></i>
+              <%= preset.downloadCount %> downloads
+            </span>
+            <span class="upload-date">
+              Uploaded on <%= new Date(preset.createdAt).toLocaleDateString() %>
+            </span>
+          </div>
+        </div>
+
+        <div class="preset-info">
+          <div class="tags">
+            <span class="tag brand"><%= preset.brand %></span>
+            <span class="tag model"><%= preset.model %></span>
+          </div>
+          <p class="description"><%= preset.description %></p>
+          <p class="uploader">Uploaded by: <%= preset.uploadedBy %></p>
+          <div class="downloadPresetBtn">
+            <button class="download-btn" data-file-id="<%= preset._id %>">
+              Download Preset
+            </button>
+            <button class="like-count" data-type="like">
+              <i data-lucide="heart"></i>
+              <span></span>
+            </button>
+          </div>
+        </div>
+
+        <div class="comments-section">
+          <h2>Comments</h2>
+          <% if (isAuthenticated) { %>
+          <form id="commentForm" class="comment-form">
+            <textarea name="content" placeholder="Add a comment..." required></textarea>
+            <button type="submit">Post Comment</button>
+          </form>
+          <% } else { %>
+          <p class="login-prompt">
+            Please <a href="/login">login</a> to comment
+          </p>
+          <% } %>
+
+          <div class="comments-list">
+            <% comments.forEach(comment => { %>
+            <div class="comment" data-comment-id="<%= comment._id %>">
+              <div class="comment-header">
+                <span class="comment-author"><%= comment.userId.name %></span>
+                <span class="comment-date">
+                  <%= new Date(comment.createdAt).toLocaleDateString() %>
+                </span>
+              </div>
+              <p class="comment-content"><%= comment.content %></p>
+              <div class="comment-actions">
+                <button class="reaction-btn like-btn <%= comment.userReactions.find(r => r.userId.toString() === user?.id && r.type === 'like') ? 'active' : '' %>" data-type="like">
+                  <i data-lucide="thumbs-up"></i>
+                  <span><%= comment.likes %></span>
+                </button>
+                <button class="reaction-btn dislike-btn <%= comment.userReactions.find(r => r.userId.toString() === user?.id && r.type === 'dislike') ? 'active' : '' %>" data-type="dislike">
+                  <i data-lucide="thumbs-down"></i>
+                  <span><%= comment.dislikes %></span>
+                </button>
+                <% if (isAuthenticated && comment.userId.id === user.id) { %>
+                    <button class="delete-comment-btn" data-comment-id="<%= comment._id %>">
+                        <i data-lucide="trash-2"></i>
+                    </button>
+                <% } %>
+              </div>
+            </div>
+            <% }); %>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const navbarToggle = document.querySelector('.navbar-toggle');
+        const navbarMenu = document.querySelector('.navbar-menu');
+        const userIconBtn = document.querySelector('.user-icon-btn');
+        const userMenu = document.querySelector('.user-menu');
+        let isMenuOpen = false;
+        let isUserMenuOpen = false;
+
+        // Navbar toggle functionality
+        function toggleMenu() {
+          isMenuOpen = !isMenuOpen;
+          navbarToggle.classList.toggle('active');
+          navbarMenu.classList.toggle('active');
+          navbarToggle.setAttribute('aria-expanded', isMenuOpen);
+          document.body.style.overflow = isMenuOpen ? 'hidden' : '';
+        }
+
+        function closeMenu() {
+          if (isMenuOpen) {
+            isMenuOpen = false;
+            navbarToggle.classList.remove('active');
+            navbarMenu.classList.remove('active');
+            navbarToggle.setAttribute('aria-expanded', 'false');
+            document.body.style.overflow = '';
+          }
+        }
+
+        navbarToggle.addEventListener('click', (e) => {
+          e.stopPropagation();
+          toggleMenu();
+        });
+
+        // User menu functionality
+        if (userIconBtn) {
+          userIconBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            isUserMenuOpen = !isUserMenuOpen;
+            userMenu.classList.toggle('active');
+            userIconBtn.setAttribute('aria-expanded', isUserMenuOpen);
+          });
+        }
+
+        // Comments functionality
+        const commentForm = document.getElementById('commentForm');
+        if (commentForm) {
+          commentForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const content = e.target.querySelector('textarea').value;
+            
+            try {
+              const response = await fetch('/User/api/comments', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                  presetId: '<%= preset._id %>',
+                  content
+                })
+              });
+
+              if (response.ok) {
+                const comment = await response.json();
+                addCommentToDOM(comment);
+                e.target.reset();
+              } else {
+                throw new Error('Failed to post comment');
+              }
+            } catch (error) {
+              console.error('Error posting comment:', error);
+              alert('Error posting comment. Please try again.');
+            }
+          });
+        }
+
+        // Comment reactions functionality
+        document.querySelector('.comments-list').addEventListener('click', async (e) => {
+          const reactionBtn = e.target.closest('.reaction-btn');
+          if (!reactionBtn) return;
+
+          const commentId = reactionBtn.closest('.comment').dataset.commentId;
+          const type = reactionBtn.dataset.type;
+
+          try {
+            const response = await fetch(`/User/api/comments/${commentId}/reaction`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ type })
+            });
+
+            if (response.ok) {
+              const comment = await response.json();
+              updateCommentReactions(commentId, comment);
+            } else {
+              throw new Error('Failed to update reaction');
+            }
+          } catch (error) {
+            if (!isAuthenticated) {
+              if (confirm('Please login to like this preset')) {
+                window.location.href = '/login';
+              }
+              return;
+            } else {
+                console.error('Error updating reaction:', error);
+                alert('Error updating reaction. Please try again.');
+            }
+          }
+        });
+
+        // Download functionality
+        async function downloadFile(fileId) {
+          try {
+            const downloadResponse = await fetch(`/EQZone/api/files/${fileId}/download`);
+            if (!downloadResponse.ok) throw new Error('Download failed');
+
+            const blob = await downloadResponse.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = '<%= preset.title %>.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+
+            // Update download count without page refresh
+            const countSpan = document.querySelector('.download-count');
+            const currentCount = parseInt(countSpan.textContent);
+            countSpan.innerHTML = `
+              <i data-lucide="download"></i>
+              ${currentCount + 1} downloads
+            `;
+            lucide.createIcons();
+          } catch (error) {
+            console.error('Error downloading file:', error);
+            alert('Error downloading file. Please try again.');
+          }
+        }
+
+        // Helper functions
+        function updateCommentReactions(commentId, data) {
+          const commentElement = document.querySelector(`.comment[data-comment-id="${commentId}"]`);
+          const likeBtn = commentElement.querySelector('.like-btn');
+          const dislikeBtn = commentElement.querySelector('.dislike-btn');
+          
+          likeBtn.querySelector('span').textContent = data.likes;
+          dislikeBtn.querySelector('span').textContent = data.dislikes;
+          
+          // Update active states
+          likeBtn.classList.toggle('active', data.userReaction === 'like');
+          dislikeBtn.classList.toggle('active', data.userReaction === 'dislike');
+        }
+
+        function addCommentToDOM(comment) {
+          const commentsList = document.querySelector('.comments-list');
+          const commentElement = document.createElement('div');
+          commentElement.className = 'comment';
+          commentElement.dataset.commentId = comment._id;
+          
+          // Check if the current user is the comment author
+          const isCommentOwner = '<%= user?.id %>' === comment.userId._id;
+          
+          commentElement.innerHTML = `
+            <div class="comment-header">
+              <span class="comment-author">${comment.userId.name}</span>
+              ${isCommentOwner ? `
+                <button class="delete-comment-btn" data-comment-id="${comment._id}">
+                  <i data-lucide="trash-2"></i>
+                </button>
+              ` : ''}
+            </div>
+            <p class="comment-content">${comment.content}</p>
+            <p class="comment-date">${new Date(comment.createdAt).toLocaleDateString()}</p>
+            <div class="comment-actions">
+              <button class="reaction-btn like-btn" data-type="like">
+                <i data-lucide="thumbs-up"></i>
+                <span>${comment.likes || 0}</span>
+              </button>
+              <button class="reaction-btn dislike-btn" data-type="dislike">
+                <i data-lucide="thumbs-down"></i>
+                <span>${comment.dislikes || 0}</span>
+              </button>
+            </div>
+          `;
+          
+          if (commentsList.firstChild) {
+            commentsList.insertBefore(commentElement, commentsList.firstChild);
+          } else {
+            commentsList.appendChild(commentElement);
+          }
+          lucide.createIcons();
+        }
+
+        // Delete comment functionality
+        document.querySelector('.comments-list').addEventListener('click', async (e) => {
+          const deleteBtn = e.target.closest('.delete-comment-btn');
+          if (!deleteBtn) return;
+
+          if (!confirm('Are you sure you want to delete this comment?')) return;
+
+          const commentId = deleteBtn.dataset.commentId;
+          try {
+            const response = await fetch(`/User/api/comments/${commentId}`, {
+              method: 'DELETE'
+            });
+
+            if (response.ok) {
+              const commentElement = deleteBtn.closest('.comment');
+              commentElement.remove();
+            } else {
+              throw new Error('Failed to delete comment');
+            }
+          } catch (error) {
+            console.error('Error deleting comment:', error);
+            alert('Error deleting comment. Please try again.');
+          }
+        });
+
+        // Event listeners for download button
+        document.querySelector('.download-btn').addEventListener('click', function() {
+          downloadFile(this.dataset.fileId);
+        });
+
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        const isAuthenticated = '<%= isAuthenticated %>' === 'true';
+
+        const likeBtn = document.querySelector('.like-count');
+        const likeIcon = likeBtn.querySelector('svg');
+        const likeCountSpan = likeBtn.querySelector('span') || document.createElement('span');
+
+        // Set initial state
+        let isLiked = '<%= preset.likes?.includes(user?.id) %>' === 'true';
+        likeIcon.style.fill = isLiked ? '#ff4444' : 'none';
+        likeCountSpan.textContent = '<%= preset.likeCount || 0 %>';
+        if (!likeBtn.querySelector('span')) {
+            likeBtn.appendChild(likeCountSpan);
+        }
+
+        likeBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (!isAuthenticated) {
+              if (confirm('Please login to like this preset')) {
+                window.location.href = '/login';
+              }
+              return;
+            }
+
+            try {
+                const response = await fetch(`/User/api/presets/<%= preset._id %>/like`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    likeCountSpan.textContent = data.likeCount;
+                    
+                    // Add animation class
+                    likeIcon.classList.add('like-animation');
+                    setTimeout(() => {
+                        likeIcon.classList.remove('like-animation');
+                    }, 300);
+
+                    // Toggle fill based on like state
+                    likeIcon.style.fill = data.isLiked ? '#ff4444' : 'none';
+                }
+            } catch (error) {
+                console.error('Error liking preset:', error);
+            }
+        });
+      }); // End of DOMContentLoaded
+    </script>
+  </body>
+</html>

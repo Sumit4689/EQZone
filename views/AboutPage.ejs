@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EQZone</title>
+    <link rel="stylesheet" href="/index.css" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+  </head>
+
+  <body>
+    <div id="welcomeModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Welcome to EQZone!</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <h3>What is EQ?</h3>
+                <p>EQ (Equalization) is the process of adjusting the balance between frequency components within an electronic signal. For IEMs (In-Ear Monitors), EQ helps customize the sound signature to your preferences.</p>
+                
+                <h3>About EQZone</h3>
+                <p>EQZone is a community-driven platform where users can:</p>
+                <ul>
+                    <li>Share and discover IEM EQ presets</li>
+                    <li>Download presets for your favorite IEMs</li>
+                    <li>Upload your own custom EQ settings</li>
+                    <li>Interact with other audio enthusiasts</li>
+                </ul>
+                
+                <h3>Getting Started</h3>
+                <p>Browse through our collection of presets, create an account to:</p>
+                <ul>
+                    <li>Save your favorite presets</li>
+                    <li>Share your own EQ settings</li>
+                    <li>Comment and interact with the community</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <label class="dont-show-again">
+                    <input type="checkbox" id="dontShowAgain">
+                    Don't show this again
+                </label>
+                <button class="modal-button" id="getStartedBtn">Get Started!</button>
+            </div>
+        </div>
+    </div>
+
+    <nav class="navbar">
+      <div class="navbar-container">
+        <div class="navbar-logo">
+          <a href="/EQZone" class="logo-text">EQZone</a>
+        </div>
+
+        <button
+          class="navbar-toggle"
+          aria-label="Toggle navigation"
+          aria-expanded="false"
+        >
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+        </button>
+
+        <ul class="navbar-menu">
+          <li class="nav-item">
+            <a href="/EQZone" class="nav-link">
+              Home
+              <span class="nav-link-underline"></span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              About
+              <span class="nav-link-underline"></span>
+            </a>
+          </li>
+          <% if (!isAuthenticated) { %>
+          <li class="nav-item">
+            <a href="/login" class="nav-link">
+              Login
+              <span class="nav-link-underline"></span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/register" class="nav-link">
+              SignUp
+              <span class="nav-link-underline"></span>
+            </a>
+          </li>
+          <% } else { %>
+          <li class="nav-item user-menu-container">
+            <button
+              class="user-icon-btn"
+              aria-label="User menu"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <i data-lucide="user-circle-2" class="user-icon"></i>
+            </button>
+            <ul class="user-menu">
+              <li><a href="/User/profilePage">Profile</a></li>
+              <li><a href="/User/myFiles">My Presets</a></li>
+              <li><a href="/logout" id="logout-link">Logout</a></li>
+            </ul>
+          </li>
+          <% } %>
+        </ul>
+      </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="about-container">
+            <section class="about-section">
+                <h1>About EQZone</h1>
+                <p>EQZone is a community-driven platform dedicated to audio enthusiasts, providing a space to share and discover IEM EQ presets.</p>
+            </section>
+
+            <section class="team-section">
+                <h2>Development Team</h2>
+                <div class="team-member">
+                    <h3>Sumit Patil</h3>
+                    <p>Lead Developer</p>
+                    <p>Responsible for design and implementation of EQZone</p>
+                </div>
+                <div class="team-member">
+                  <h3>Roshan Ghogare</h3>
+                  <p>Lead Developer</p>
+                  <p>Responsible for design and implementation of EQZone</p>
+              </div>
+              <div class="team-member">
+                <h3>Nayan Patil</h3>
+                <p>Lead Developer</p>
+                <p>Responsible for design and implementation of EQZone</p>
+            </div>
+            </section>
+
+            <section class="contact-section">
+                <h2>Contact Us</h2>
+                <div class="contact-info">
+                    <p><strong>Email:</strong> <a href="mailto:contact@eqzone.com">contact@eqzone.com</a></p>
+                    <p><strong>GitHub:</strong> <a href="https://github.com/yourusername" target="_blank">github.com/yourusername</a></p>
+                    <!-- Add other social/contact links as needed -->
+                </div>
+            </section>
+
+            <section class="tech-stack">
+                <h2>Built With</h2>
+                <ul class="tech-list">
+                    <li style="background-color: rgb(118, 201, 118); border: 1px solid rgb(0, 116, 0); color: white;">Node.js</li>
+                    <li style="background-color: rgb(241, 235, 147); border: 1px solid rgb(250, 183, 0); color: rgb(253, 173, 68);">Express</li>
+                    <li style="background-color: rgb(255, 118, 187); border: 1px solid rgb(122, 5, 83); color: white;">EJS</li>
+                    <li style="background-color: rgb(173, 243, 151); border: 1px solid rgb(64, 192, 13); color: rgb(127, 172, 5);">MongoDB</li>
+                    <!-- Add other technologies you used -->
+                </ul>
+            </section>
+        </div>
+    </main>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+          const navbarToggle = document.querySelector('.navbar-toggle');
+          const navbarMenu = document.querySelector('.navbar-menu');
+          const userIconBtn = document.querySelector('.user-icon-btn');
+          const userMenu = document.querySelector('.user-menu');
+          let isMenuOpen = false;
+          let isUserMenuOpen = false;
+
+          function toggleMenu() {
+              isMenuOpen = !isMenuOpen;
+              navbarToggle.classList.toggle('active');
+              navbarMenu.classList.toggle('active');
+              navbarToggle.setAttribute('aria-expanded', isMenuOpen);
+              document.body.style.overflow = isMenuOpen ? 'hidden' : '';
+          }
+
+          function closeMenu() {
+              if (isMenuOpen) {
+                  isMenuOpen = false;
+                  navbarToggle.classList.remove('active');
+                  navbarMenu.classList.remove('active');
+                  navbarToggle.setAttribute('aria-expanded', 'false');
+                  document.body.style.overflow = '';
+              }
+          }
+
+          function toggleUserMenu(event) {
+              event.stopPropagation();
+              isUserMenuOpen = !isUserMenuOpen;
+              userMenu.classList.toggle('active');
+              userIconBtn.setAttribute('aria-expanded', isUserMenuOpen);
+          }
+
+          function closeUserMenu() {
+              if (isUserMenuOpen) {
+                  isUserMenuOpen = false;
+                  userMenu.classList.remove('active');
+                  userIconBtn.setAttribute('aria-expanded', 'false');
+              }
+          }
+
+          // Toggle menu on button click
+          navbarToggle.addEventListener('click', (e) => {
+              e.stopPropagation();
+              toggleMenu();
+          });
+
+          // Toggle user menu on button click
+          if (userIconBtn) {
+              userIconBtn.addEventListener('click', toggleUserMenu);
+          }
+
+          // Close menus when clicking outside
+          document.addEventListener('click', (e) => {
+              if (isMenuOpen && !navbarMenu.contains(e.target) && !navbarToggle.contains(e.target)) {
+                  closeMenu();
+              }
+              if (isUserMenuOpen && !userMenu.contains(e.target) && !userIconBtn.contains(e.target)) {
+                  closeUserMenu();
+              }
+          });
+
+          if(<%=isAuthenticated%>){
+              document.getElementById("logout-link").addEventListener("click", (e) => {
+                  e.preventDefault();
+                  handleLogout();
+              });
+          }
+
+          function handleLogout() {
+              fetch('/logout', {
+                  method: 'POST',
+                  credentials: 'same-origin'
+              })
+              .then(response => {
+                  if (response.ok) {
+                      window.location.href = '/EQZone';
+                  }
+              })
+              .catch(error => console.error('Logout error:', error));
+          }
+
+          // Close menu when clicking on a link
+          const navLinks = document.querySelectorAll('.nav-link');
+          navLinks.forEach(link => {
+              link.addEventListener('click', closeMenu);
+          });
+
+          // Close menus on escape key press
+          document.addEventListener('keydown', (e) => {
+              if (e.key === 'Escape') {
+                  if (isMenuOpen) closeMenu();
+                  if (isUserMenuOpen) closeUserMenu();
+              }
+          });
+
+          // Handle window resize
+          let resizeTimer;
+          window.addEventListener('resize', () => {
+              clearTimeout(resizeTimer);
+              resizeTimer = setTimeout(() => {
+                  if (window.innerWidth > 768) {
+                      if (isMenuOpen) closeMenu();
+                      if (isUserMenuOpen) closeUserMenu();
+                  }
+              }, 250);
+          });
+
+          // Initialize Lucide icons
+          lucide.createIcons();
+      });
+    </script>
+  </body>
+</html>

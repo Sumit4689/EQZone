@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Liked Presets - EQZone</title>
+    <link rel="stylesheet" href="/myfiles.css" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+    <div class="container">
+        <nav class="vertical-navbar">
+            <div class="nav-header">
+                <h2 class="nav-title">EQZone</h2>
+                <button class="menu-toggle" aria-label="Toggle menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+            <div class="nav-content">
+                <ul class="nav-links">
+                    <li>
+                        <a href="/EQZone" class="nav-link"><svg xmlns="http://www.w3.org/2000/svg" width="20"
+                                height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-home mr-2">
+                                <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                            </svg>Home</a>
+                    </li>
+                    <li>
+                        <a href="/User/profilePage" class="nav-link"><svg xmlns="http://www.w3.org/2000/svg" width="20"
+                                height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user mr-2">
+                                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>Profile</a>
+                    </li>
+                    <li>
+                        <a href="/User/myFiles" class="nav-link"><svg xmlns="http://www.w3.org/2000/svg" width="20"
+                                height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text mr-2">
+                                <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path>
+                                <path d="M14 2v4a2 2 0 0 0 2 2h4"></path>
+                                <path d="M10 9H8"></path>
+                                <path d="M16 13H8"></path>
+                                <path d="M16 17H8"></path>
+                            </svg>My Files</a>
+                    </li>
+                    <li>
+                        <a href="/User/likedPresets" class="nav-link"><svg xmlns="http://www.w3.org/2000/svg" width="20"
+                                height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart">
+                                <path
+                                    d="M20.8 4.6c-1.9-1.9-5-1.9-6.9 0l-1 1-1-1c-1.9-1.9-5-1.9-6.9 0-2 2-2 5.2 0 7.2l7.9 8 7.9-8c2-2 2-5.2 0-7.2z">
+                                </path>
+                            </svg>
+                            Liked Presets</a>
+                    </li>
+                    <li>
+                        <a href="/User/uploadFile" class="nav-link"><svg xmlns="http://www.w3.org/2000/svg" width="20"
+                                height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-upload mr-2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" x2="12" y1="3" y2="15"></line>
+                            </svg>Upload File</a>
+                    </li>
+                    <li>
+                        <button class="nav-link logout-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="lucide lucide-log-out mr-2">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                <polyline points="16 17 21 12 16 7"></polyline>
+                                <line x1="21" x2="9" y1="12" y2="12"></line>
+                            </svg>Logout
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        
+        <main class="main-content">
+            <section class="files-section">
+                <div class="filters-container">
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="Search files..." />
+                    </div>
+
+                    <div class="filter-options">
+                        <select id="brandFilter">
+                            <option value="">All Brands</option>
+                            <% const brands = [...new Set(presets.map(file => file.brand))];
+                            brands.forEach(brand => { %>
+                                <option value="<%= brand %>"><%= brand %></option>
+                            <% }); %>
+                        </select>
+
+                        <select id="modelFilter">
+                            <option value="">All Models</option>
+                            <% const models = [...new Set(presets.map(file => file.model))];
+                            models.forEach(model => { %>
+                                <option value="<%= model %>"><%= model %></option>
+                            <% }); %>
+                        </select>
+
+                        <select id="sortBy">
+                            <option value="date-new">Newest First</option>
+                            <option value="date-old">Oldest First</option>
+                            <option value="downloads">Most Downloads</option>
+                            <option value="title">Title A-Z</option>
+                            <option value="likes">Most Liked</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="files-grid" id="filesGrid">
+                    <% presets.forEach(file => { %>
+                        <div class="file-card" 
+                            data-file-id="<%= file._id %>" 
+                            data-brand="<%= file.brand %>"
+                            data-model="<%= file.model %>"
+                            data-like-count="<%= file.likeCount || 0 %>"
+                            onclick="window.location.href='/User/preset/<%= file._id %>'">
+                            <div class="card-header">
+                                <h3><%= file.title %></h3>
+                                <span class="download-count">
+                                    <i data-lucide="download"></i>
+                                    <%= file.downloadCount %>
+                                </span>
+                            </div>
+                            <div class="card-body">
+                                <p class="description"><%= file.description %></p>
+                                <p class="uploader-email">Uploaded by: <%= file.uploadedBy %></p>
+                                <div class="tags">
+                                    <div class="alltags">
+                                        <span class="tag brand"><%= file.brand %></span>
+                                        <span class="tag model"><%= file.model %></span>
+                                    </div>
+                                    <button class="like-count" 
+                                        data-preset-id="<%= file._id %>"
+                                        data-is-liked="<%= file.likes?.some(like => like._id.toString() === user?.id) %>"
+                                        data-like-count="<%= file.likeCount || 0 %>"
+                                        onclick="event.stopPropagation();">
+                                        <i data-lucide="heart" 
+                                            style="fill: <%= file.likes?.some(like => like._id.toString() === user?.id) ? '#ff4444' : 'none' %>">
+                                        </i>
+                                        <span><%= file.likeCount || 0 %></span>
+                                    </button>
+                                </div>
+                                <div class="card-footer">
+                                    <span class="upload-date">
+                                        <%= new Date(file.createdAt).toLocaleDateString() %>
+                                    </span>
+                                    <div class="buttons">
+                                        <button class="download-btn" type="button" onclick="event.stopPropagation();">
+                                            Download
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <% }); %>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        async function downloadFile(fileId, title) {
+            try {
+                const downloadResponse = await fetch(
+                    `/EQZone/api/files/${fileId}/download`
+                );
+                if (!downloadResponse.ok) throw new Error("Download failed");
+
+                // Get the file content
+                const blob = await downloadResponse.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                console.log(title);
+                a.download = `${title.trim()}.txt`; // Use the preset title
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+
+                // Update download count without page refresh
+                const card = document.querySelector(
+                    `.file-card[data-file-id="${fileId}"]`
+                );
+                const countSpan = card.querySelector(".download-count");
+                const currentCount = parseInt(countSpan.textContent);
+                countSpan.innerHTML = `
+                  <i data-lucide="download"></i>
+                  ${currentCount + 1}
+              `;
+                lucide.createIcons();
+            } catch (error) {
+                console.error("Error downloading file:", error);
+                alert("Error downloading file. Please try again.");
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.getElementById("accountSettingsForm");
+            const menuToggle = document.querySelector(".menu-toggle");
+            const navContent = document.querySelector(".nav-content");
+
+            // Initialize Lucide icons
+            lucide.createIcons();
+
+            // Add active class to current page in navbar
+            const navLinks = document.querySelectorAll(".nav-link");
+            navLinks.forEach((link) => {
+                if (link.getAttribute("href") === window.location.pathname) {
+                    link.classList.add("active");
+                }
+            });
+
+            // Logout functionality (for demonstration purposes)
+            const logoutBtn = document.querySelector(".logout-btn");
+            logoutBtn.addEventListener("click", (e) => {
+                e.preventDefault();
+                handleLogout();
+            });
+
+            function handleLogout() {
+                fetch("/logout", {
+                    method: "POST",
+                    credentials: "same-origin",
+                })
+                    .then((response) => {
+                        if (response.ok) {
+                            window.location.href = "/EQZone";
+                        }
+                    })
+                    .catch((error) => console.error("Logout error:", error));
+            }
+
+            // Mobile menu toggle
+            menuToggle.addEventListener("click", function () {
+                navContent.classList.toggle("show");
+                this.classList.toggle("active");
+
+                // Animate hamburger to X
+                const spans = this.querySelectorAll("span");
+                spans[0].classList.toggle("rotate-45");
+                spans[1].classList.toggle("opacity-0");
+                spans[2].classList.toggle("-rotate-45");
+            });
+
+            // Close mobile menu when clicking outside
+            document.addEventListener("click", function (e) {
+                const isClickInsideNav =
+                    navContent.contains(e.target) || menuToggle.contains(e.target);
+                if (!isClickInsideNav && navContent.classList.contains("show")) {
+                    navContent.classList.remove("show");
+                    menuToggle.classList.remove("active");
+
+                    // Reset hamburger animation
+                    const spans = menuToggle.querySelectorAll("span");
+                    spans[0].classList.remove("rotate-45");
+                    spans[1].classList.remove("opacity-0");
+                    spans[2].classList.remove("-rotate-45");
+                }
+            });
+
+            // Close mobile menu when window is resized to desktop size
+            window.addEventListener("resize", function () {
+                if (
+                    window.innerWidth > 768 &&
+                    navContent.classList.contains("show")
+                ) {
+                    navContent.classList.remove("show");
+                    menuToggle.classList.remove("active");
+
+                    // Reset hamburger animation
+                    const spans = menuToggle.querySelectorAll("span");
+                    spans[0].classList.remove("rotate-45");
+                    spans[1].classList.remove("opacity-0");
+                    spans[2].classList.remove("-rotate-45");
+                }
+            });
+
+            // File filtering and sorting functionality
+            const searchInput = document.getElementById("searchInput");
+            const brandFilter = document.getElementById("brandFilter");
+            const modelFilter = document.getElementById("modelFilter");
+            const sortBySelect = document.getElementById("sortBy");
+            const filesGrid = document.getElementById("filesGrid");
+
+            function filterAndSortFiles() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const selectedBrand = brandFilter.value;
+                const selectedModel = modelFilter.value;
+                const sortBy = sortBySelect.value;
+
+                const cards = Array.from(
+                    filesGrid.getElementsByClassName("file-card")
+                );
+
+                cards.forEach((card) => {
+                    const title = card.querySelector("h3").textContent.toLowerCase();
+                    const brand = card.dataset.brand;
+                    const model = card.dataset.model;
+
+                    const matchesSearch = title.includes(searchTerm);
+                    const matchesBrand = !selectedBrand || brand === selectedBrand;
+                    const matchesModel = !selectedModel || model === selectedModel;
+
+                    card.style.display =
+                        matchesSearch && matchesBrand && matchesModel ? "block" : "none";
+                });
+
+                // Sort cards
+                const sortedCards = cards.sort((a, b) => {
+                    switch (sortBy) {
+                        case "date-new":
+                            return (
+                                new Date(b.querySelector(".upload-date").textContent) -
+                                new Date(a.querySelector(".upload-date").textContent)
+                            );
+                        case "date-old":
+                            return (
+                                new Date(a.querySelector(".upload-date").textContent) -
+                                new Date(b.querySelector(".upload-date").textContent)
+                            );
+                        case "downloads":
+                            return (
+                                parseInt(b.querySelector(".download-count").textContent) -
+                                parseInt(a.querySelector(".download-count").textContent)
+                            );
+                        case "title":
+                            return a
+                                .querySelector("h3")
+                                .textContent.localeCompare(b.querySelector("h3").textContent);
+                        case "likes":
+                            return (
+                                parseInt(b.dataset.likeCount || 0) -
+                                parseInt(a.dataset.likeCount || 0)
+                            );
+                    }
+                });
+
+                filesGrid.innerHTML = "";
+                sortedCards.forEach((card) => filesGrid.appendChild(card));
+            }
+
+            // Add event listeners
+            searchInput.addEventListener("input", filterAndSortFiles);
+            brandFilter.addEventListener("change", filterAndSortFiles);
+            modelFilter.addEventListener("change", filterAndSortFiles);
+            sortBySelect.addEventListener("change", filterAndSortFiles);
+
+            // Add event listeners for download buttons
+            document.querySelectorAll(".download-btn").forEach((button) => {
+                button.addEventListener("click", (e) => {
+                    e.preventDefault(); // Prevent default navigation
+                    e.stopPropagation(); // Stop event from bubbling up to the card
+                    const fileCard = button.closest(".file-card");
+                    const fileId = fileCard.dataset.fileId;
+                    const title = fileCard.querySelector("h3").textContent;
+                    downloadFile(fileId, title);
+                });
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const isAuthenticated = "<%= isAuthenticated %>" === "true";
+            const likeButtons = document.querySelectorAll(".like-count");
+
+            // Initialize Lucide icons
+            lucide.createIcons();
+
+            likeButtons.forEach((likeBtn) => {
+                const presetId = likeBtn.dataset.presetId;
+                const likeIcon = likeBtn.querySelector("svg");
+                const likeCountSpan = likeBtn.querySelector("span");
+
+                // Set initial state
+                let isLiked = likeBtn.dataset.isLiked === "true";
+                if (likeIcon) {
+                    likeIcon.style.fill = isLiked ? "#ff4444" : "none";
+                    likeCountSpan.textContent = likeBtn.dataset.likeCount;
+
+                    likeBtn.addEventListener("click", async (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+
+                        if (!isAuthenticated) {
+                            if (confirm("Please login to like this preset")) {
+                                window.location.href = "/login";
+                            }
+                            return;
+                        }
+
+                        try {
+                            const response = await fetch(
+                                `/User/api/presets/${presetId}/like`,
+                                {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                    },
+                                }
+                            );
+
+                            if (response.ok) {
+                                const data = await response.json();
+                                likeCountSpan.textContent = data.likeCount;
+
+                                // Toggle fill based on like state
+                                isLiked = data.isLiked;
+                                likeIcon.style.fill = isLiked ? "#ff4444" : "none";
+
+                                // If the preset is unliked, remove it from the DOM
+                                if (!isLiked) {
+                                    const fileCard = likeBtn.closest(".file-card");
+                                    fileCard.remove();
+                                }
+                            }
+                        } catch (error) {
+                            console.error("Error liking preset:", error);
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
