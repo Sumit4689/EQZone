@@ -277,3 +277,6 @@ If you encounter any issues or have questions:
 ---
 
 **EQZone** - Share your sound, discover new possibilities! 🎵
+
+- [ ] <img width="1920" height="1016" alt="image" src="https://github.com/user-attachments/assets/6021f3b2-e09a-4986-a1b0-bdd48df1ad35" />
+
