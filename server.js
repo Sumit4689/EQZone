@@ -25,5 +25,5 @@ app.use("/Admin", verifyToken, require('./routes/AdminRoute'))
 app.use("/About",verifyToken, require('./routes/AboutRoute'))
 
 app.listen(port, () => {
-  console.log("Server is Listening on port", port);
+  console.log("Server is Listening on port http://localhost:" + port + "/EQZone");
 });
