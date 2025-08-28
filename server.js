@@ -3,7 +3,7 @@ const connectDb = require('./config/dbConnection');
 const cookieParser = require('cookie-parser');
 const verifyToken = require('./middelware/Authorizations');
 const dotenv = require('dotenv').config()
-const port = process.env.PORT || 2002
+const port = process.env.PORT || 3000
 const app = express();
 const path = require('path')
 connectDb();
@@ -19,11 +19,22 @@ app.use("/login", require('./routes/loginRoute'))
 app.use("/register", require('./routes/registerRoute'))
 app.use("/logout", require('./routes/logoutRoute'))
 
+// Add root route that redirects to the main application
+app.get('/', (req, res) => {
+  res.redirect('/EQZone');
+});
+
 app.use("/EQZone", verifyToken, require('./routes/EQZoneRoute'))
 app.use("/User", verifyToken, require('./routes/UserRoute'))
 app.use("/Admin", verifyToken, require('./routes/AdminRoute'))
 app.use("/About",verifyToken, require('./routes/AboutRoute'))
 
-app.listen(port, () => {
-  console.log("Server is Listening on port http://localhost:" + port + "/EQZone");
-});
+// For local development
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(port, () => {
+    console.log("Server is Listening on port http://localhost:" + port + "/EQZone");
+  });
+}
+
+// Export the app for Vercel
+module.exports = app;

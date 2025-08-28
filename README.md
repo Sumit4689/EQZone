@@ -226,17 +226,29 @@ EQZone/
 
 ### Environment Variables
 ```env
-PORT=2002
 CONNECTION_STRING=your_mongodb_connection_string
 JWT_SECRET=your_secure_jwt_secret
 NODE_ENV=production
 ```
 
+### Deploying to Vercel
+1. Make sure you have the `vercel.json` file in your project root
+2. Install Vercel CLI: `npm i -g vercel`
+3. Login to Vercel: `vercel login`
+4. Deploy: `vercel`
+5. Set up environment variables in the Vercel dashboard:
+   - Go to your project settings
+   - Navigate to "Environment Variables"
+   - Add your `CONNECTION_STRING` and `JWT_SECRET`
+6. For production deployment: `vercel --prod`
+
+Note: When deploying to Vercel, do not set the PORT environment variable as Vercel handles this automatically.
+
 ### Production Considerations
 - Use MongoDB Atlas for cloud database
-- Set up proper environment variables
-- Configure reverse proxy (Nginx)
-- Enable HTTPS
+- Set up proper environment variables in the Vercel dashboard
+- Ensure MongoDB Atlas network access allows connections from Vercel
+- Enable HTTPS (handled automatically by Vercel)
 - Set up monitoring and logging
 
 ## 🤝 Contributing
