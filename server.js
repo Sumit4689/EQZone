@@ -30,11 +30,9 @@ app.use("/Admin", verifyToken, require('./routes/AdminRoute'))
 app.use("/About",verifyToken, require('./routes/AboutRoute'))
 
 // For local development
-if (process.env.NODE_ENV !== 'production') {
-  app.listen(port, () => {
-    console.log("Server is Listening on port http://localhost:" + port + "/EQZone");
-  });
-}
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
 
 // Export the app for Vercel
 module.exports = app;
