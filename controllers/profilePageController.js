@@ -1,6 +1,6 @@
 const asyncHandler = require('express-async-handler')
 const User = require('../models/userModel')
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 const userValidationSchema = require('../validation/userValidationSchema')
 
 const getProfilePage = asyncHandler(async (req, res) => {
